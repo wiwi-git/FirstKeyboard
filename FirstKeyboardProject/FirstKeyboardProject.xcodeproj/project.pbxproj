@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -13,13 +13,17 @@
 		1718906F2478CA81007B56A4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1718906E2478CA81007B56A4 /* Assets.xcassets */; };
 		171890722478CA81007B56A4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 171890702478CA81007B56A4 /* LaunchScreen.storyboard */; };
 		171890802478CAC5007B56A4 /* KeyboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1718907F2478CAC5007B56A4 /* KeyboardViewController.swift */; };
-		171890842478CAC5007B56A4 /* FirstKeyboard.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 1718907D2478CAC5007B56A4 /* FirstKeyboard.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		171890842478CAC5007B56A4 /* FirstKeyboard.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 1718907D2478CAC5007B56A4 /* FirstKeyboard.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		1718908A2478CBC9007B56A4 /* TextString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 171890892478CBC9007B56A4 /* TextString.swift */; };
 		1718908C2478CBEE007B56A4 /* KeyboardColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1718908B2478CBEE007B56A4 /* KeyboardColor.swift */; };
 		17C116CB2478CF660099ABFA /* TextString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 171890892478CBC9007B56A4 /* TextString.swift */; };
 		17C116CE2478D0230099ABFA /* KeyboardButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C116CD2478D0230099ABFA /* KeyboardButton.swift */; };
 		17C116CF247929320099ABFA /* KeyboardButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C116CD2478D0230099ABFA /* KeyboardButton.swift */; };
 		17C116D0247A13E40099ABFA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1718906E2478CA81007B56A4 /* Assets.xcassets */; };
+		17CA9ABB2EBCF757000BDD3F /* HangulAutomata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CA9ABA2EBCF750000BDD3F /* HangulAutomata.swift */; };
+		17CA9ABD2EBD1E27000BDD3F /* NotificationName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CA9ABC2EBD1E24000BDD3F /* NotificationName.swift */; };
+		17CA9AC02EBE75CC000BDD3F /* KeyboardButtonEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CA9ABF2EBE75C3000BDD3F /* KeyboardButtonEvent.swift */; };
+		17CA9AC22EC4DB01000BDD3F /* exHangul.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CA9AC12EC4DAF8000BDD3F /* exHangul.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -33,15 +37,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		171890882478CAC5007B56A4 /* Embed App Extensions */ = {
+		171890882478CAC5007B56A4 /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				171890842478CAC5007B56A4 /* FirstKeyboard.appex in Embed App Extensions */,
+				171890842478CAC5007B56A4 /* FirstKeyboard.appex in Embed Foundation Extensions */,
 			);
-			name = "Embed App Extensions";
+			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -60,6 +64,10 @@
 		171890892478CBC9007B56A4 /* TextString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextString.swift; sourceTree = "<group>"; };
 		1718908B2478CBEE007B56A4 /* KeyboardColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardColor.swift; sourceTree = "<group>"; };
 		17C116CD2478D0230099ABFA /* KeyboardButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardButton.swift; sourceTree = "<group>"; };
+		17CA9ABA2EBCF750000BDD3F /* HangulAutomata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangulAutomata.swift; sourceTree = "<group>"; };
+		17CA9ABC2EBD1E24000BDD3F /* NotificationName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationName.swift; sourceTree = "<group>"; };
+		17CA9ABF2EBE75C3000BDD3F /* KeyboardButtonEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardButtonEvent.swift; sourceTree = "<group>"; };
+		17CA9AC12EC4DAF8000BDD3F /* exHangul.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = exHangul.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,6 +124,10 @@
 		1718907E2478CAC5007B56A4 /* FirstKeyboard */ = {
 			isa = PBXGroup;
 			children = (
+				17CA9AC12EC4DAF8000BDD3F /* exHangul.swift */,
+				17CA9ABF2EBE75C3000BDD3F /* KeyboardButtonEvent.swift */,
+				17CA9ABC2EBD1E24000BDD3F /* NotificationName.swift */,
+				17CA9ABA2EBCF750000BDD3F /* HangulAutomata.swift */,
 				1718907F2478CAC5007B56A4 /* KeyboardViewController.swift */,
 				171890812478CAC5007B56A4 /* Info.plist */,
 			);
@@ -141,7 +153,7 @@
 				1718905E2478CA80007B56A4 /* Sources */,
 				1718905F2478CA80007B56A4 /* Frameworks */,
 				171890602478CA80007B56A4 /* Resources */,
-				171890882478CAC5007B56A4 /* Embed App Extensions */,
+				171890882478CAC5007B56A4 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
@@ -176,8 +188,9 @@
 		1718905A2478CA80007B56A4 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1150;
-				LastUpgradeCheck = 1150;
+				LastUpgradeCheck = 1640;
 				ORGANIZATIONNAME = "위대연";
 				TargetAttributes = {
 					171890612478CA80007B56A4 = {
@@ -248,6 +261,10 @@
 				17C116CF247929320099ABFA /* KeyboardButton.swift in Sources */,
 				171890802478CAC5007B56A4 /* KeyboardViewController.swift in Sources */,
 				17C116CB2478CF660099ABFA /* TextString.swift in Sources */,
+				17CA9AC02EBE75CC000BDD3F /* KeyboardButtonEvent.swift in Sources */,
+				17CA9ABD2EBD1E27000BDD3F /* NotificationName.swift in Sources */,
+				17CA9AC22EC4DB01000BDD3F /* exHangul.swift in Sources */,
+				17CA9ABB2EBCF757000BDD3F /* HangulAutomata.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -307,6 +324,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -315,8 +333,10 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = Q77G9L4656;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -367,6 +387,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -375,8 +396,10 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = Q77G9L4656;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -398,18 +421,20 @@
 		171890772478CA81007B56A4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = Q77G9L4656;
 				INFOPLIST_FILE = FirstKeyboardProject/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.dy.KeyboardProject;
 				PRODUCT_NAME = FirstKeyboardProject;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -418,18 +443,20 @@
 		171890782478CA81007B56A4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = Q77G9L4656;
 				INFOPLIST_FILE = FirstKeyboardProject/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.dy.KeyboardProject;
 				PRODUCT_NAME = FirstKeyboardProject;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -439,7 +466,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = Q77G9L4656;
 				INFOPLIST_FILE = FirstKeyboard/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -449,6 +475,10 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.dy.KeyboardProject.FirstKeyboard;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -458,7 +488,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = Q77G9L4656;
 				INFOPLIST_FILE = FirstKeyboard/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -468,6 +497,10 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.dy.KeyboardProject.FirstKeyboard;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

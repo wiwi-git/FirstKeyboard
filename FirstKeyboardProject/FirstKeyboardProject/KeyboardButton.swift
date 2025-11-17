@@ -46,6 +46,7 @@ class KeyboardButton: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
+//        NotificationCenter.default.addObserver(self, selector: #selector(changeModeAction), name: .changeMode, object: nil)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -104,6 +105,7 @@ class KeyboardButton: UIView {
         self.button.setOptionText(text)
     }
     
+    /// 타이틀변경 DispatchQueue.main
     func setTitle(text:String?,option:String?, for state: UIControl.State) {
         DispatchQueue.main.async {
             self.button.setTitle(text, for: state)
@@ -120,7 +122,7 @@ class KeyboardButton: UIView {
         self.button.setTitleColor(color, for: .normal)
     }
 }
-extension UIInputView: UIInputViewAudioFeedback {
+extension UIInputView: @retroactive UIInputViewAudioFeedback {
     public var enableInputClicksWhenVisible: Bool {
         return true
     }

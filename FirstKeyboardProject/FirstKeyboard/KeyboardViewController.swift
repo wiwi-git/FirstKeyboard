@@ -15,6 +15,8 @@ class KeyboardViewController: UIInputViewController {
     var shiftButton: KeyboardButton!
     var returnButton: KeyboardButton!
     var deleteButton: KeyboardButton!
+    var changeModeButton: KeyboardButton!
+    
     var numberLineButtons: [KeyboardButton]!
     var charLine1Buttons: [KeyboardButton]!
     var charLine2Buttons: [KeyboardButton]!
@@ -27,8 +29,12 @@ class KeyboardViewController: UIInputViewController {
             self.changedShiftValue()
         }
     }
-    var language:TextString.language = .en
+    var language:TextString.language = .ko
     
+    let hangul : HangulAutomata = .init()
+    
+    private(set) var lastDocumentIdentifier: UUID?
+
     override func updateViewConstraints() {
         super.updateViewConstraints()
         // Add custom view sizing constraints here
@@ -37,6 +43,7 @@ class KeyboardViewController: UIInputViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // 일반 버튼 생성
         switch language {
         case .en:
             self.numberLineButtons = self.createCharacterButtons(kind: .en(.number))
@@ -50,40 +57,59 @@ class KeyboardViewController: UIInputViewController {
             self.charLine3Buttons = self.createCharacterButtons(kind: .ko(.l3))
         }
         
-        self.nextKeyboardButton = KeyboardButton(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
-        self.spaceButton = KeyboardButton(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
-        self.shiftButton = KeyboardButton(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
-        self.returnButton = KeyboardButton(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
-        self.deleteButton = KeyboardButton(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+        // 기능 버튼 생성
+        self.nextKeyboardButton = .init(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+        self.spaceButton = .init(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+        self.shiftButton = .init(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+        self.returnButton = .init(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+        self.deleteButton = .init(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+        self.changeModeButton = .init(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
         
+        // 기능 버튼 텍스트
         self.nextKeyboardButton.setTitle(text: "", option: "", for: .normal)
         self.shiftButton.setTitle(text: "⇧", option: "", for: .normal)
         self.deleteButton.setTitle(text: "", option: "", for: .normal)
         self.spaceButton.setTitle(text: "space", option: "", for: .normal)
         self.nextKeyboardButton.button.setImage(UIImage(named: "NextKeyboard"), for: .normal)
         self.deleteButton.button.setImage(UIImage(named: "Backspace"), for: .normal)
-       
+        self.changeModeButton.setTitle(text: "한/A", option: "", for: .normal)
+        
+        // 버튼 레이아웃 셋업
         self.setButtonsLayout()
         
+        
+        // 기능 버튼 이벤트 연결
+        // + 파일이 너무길어져서 터치이벤트들은 KeyboardButtonEvent.swift 파일로 분할
         self.nextKeyboardButton.button.addTarget(self, action: #selector(handleInputModeList(from:with:)), for: .allTouchEvents)
         self.shiftButton.button.addTarget(self, action: #selector(touchUpShiftKey), for: .touchUpInside)
         self.deleteButton.button.addTarget(self, action: #selector(touchUpDeleteKey), for: .touchUpInside)
         self.spaceButton.button.addTarget(self, action: #selector(touchUpSpaceKey), for: .touchUpInside)
         self.returnButton.button.addTarget(self, action: #selector(touchUpReturnKey(_:)), for: .touchUpInside)
+        self.changeModeButton.button.addTarget(self, action: #selector(touchUpChangeModeKey), for: .touchUpInside)
         
         let longTouchDeleteButtonGesture = UILongPressGestureRecognizer(target: self, action: #selector(self.longTouchDeleteGesture(_:)))
         longTouchDeleteButtonGesture.minimumPressDuration = 0.2
-        deleteButton.button.addGestureRecognizer(longTouchDeleteButtonGesture)
+        self.deleteButton.button.addGestureRecognizer(longTouchDeleteButtonGesture)
+        
+        
     }
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        self.nextKeyboardButton.isHidden = !self.needsInputModeSwitchKey
-        self.setReturnKeyType()
+//        self.nextKeyboardButton.isHidden = !self.needsInputModeSwitchKey
+//        self.setReturnKeyType()
         let backgroundColor = UIColor(named: "Background")
         self.view.backgroundColor = backgroundColor
-    }
 
+    }
+    
+    // TODO: [UIInputViewController needsInputModeSwitchKey] was called before a connection was established to the host application 라는 경고로 옴겨봤는데 별 효과 없는듯 다른 방법을 찾아봐라
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        self.nextKeyboardButton.isHidden = !self.needsInputModeSwitchKey
+        self.setReturnKeyType()
+    }
+/*
     override func textDidChange(_ textInput: UITextInput?) {
         // The app has just changed the document's contents, the document context has been updated.
         /*
@@ -103,7 +129,7 @@ class KeyboardViewController: UIInputViewController {
         //let buttonBackgroundColor = UIColor(named: "ButtonBackground")
         //let buttonHighlightColor = UIColor(named: "ButtonHighlight")
     }
-    
+*/
     func setButtonsLayout() {
         let numberLineStackView = createCharLineStackView(buttons: numberLineButtons)
         let charLine1StackView = createCharLineStackView(buttons: charLine1Buttons)
@@ -117,7 +143,7 @@ class KeyboardViewController: UIInputViewController {
         addedFuncKeyLine3Stack.spacing = 16
         addedFuncKeyLine3Stack.translatesAutoresizingMaskIntoConstraints = false
         
-        let funcLineStackView = UIStackView(arrangedSubviews: [nextKeyboardButton, spaceButton, returnButton])
+        let funcLineStackView = UIStackView(arrangedSubviews: [nextKeyboardButton, changeModeButton, spaceButton, returnButton])
         funcLineStackView.alignment = .fill
         funcLineStackView.axis = .horizontal
         funcLineStackView.distribution = .fill
@@ -132,20 +158,20 @@ class KeyboardViewController: UIInputViewController {
         
         let safeGuide = self.view.safeAreaLayoutGuide
         NSLayoutConstraint.activate([
-            numberLineStackView.topAnchor.constraint(equalTo: safeGuide.topAnchor),
+            numberLineStackView.topAnchor.constraint(equalTo: safeGuide.topAnchor, constant: 4),
             numberLineStackView.leadingAnchor.constraint(equalTo: safeGuide.leadingAnchor, constant: 4),
             numberLineStackView.trailingAnchor.constraint(equalTo: safeGuide.trailingAnchor, constant: -4),
-            numberLineStackView.heightAnchor.constraint(equalToConstant: 40),
+//            numberLineStackView.heightAnchor.constraint(equalToConstant: 40),
             
             charLine1StackView.topAnchor.constraint(equalTo: numberLineStackView.bottomAnchor, constant: 4),
             charLine1StackView.leadingAnchor.constraint(equalTo: safeGuide.leadingAnchor,constant: 4),
             charLine1StackView.trailingAnchor.constraint(equalTo: safeGuide.trailingAnchor, constant: -4),
-            charLine1StackView.heightAnchor.constraint(equalToConstant: 40),
+//            charLine1StackView.heightAnchor.constraint(equalToConstant: 40),
             
             charLine2StackView.topAnchor.constraint(equalTo: charLine1StackView.bottomAnchor, constant: 4),
             charLine2StackView.leadingAnchor.constraint(equalTo: safeGuide.leadingAnchor,constant: 24),
             charLine2StackView.trailingAnchor.constraint(equalTo: safeGuide.trailingAnchor, constant: -24),
-            charLine2StackView.heightAnchor.constraint(equalToConstant: 40),
+//            charLine2StackView.heightAnchor.constraint(equalToConstant: 40),
             
             shiftButton.widthAnchor.constraint(equalToConstant: 45),
             deleteButton.widthAnchor.constraint(equalToConstant: 45),
@@ -153,11 +179,12 @@ class KeyboardViewController: UIInputViewController {
             addedFuncKeyLine3Stack.topAnchor.constraint(equalTo: charLine2StackView.bottomAnchor, constant: 4),
             addedFuncKeyLine3Stack.leadingAnchor.constraint(equalTo: safeGuide.leadingAnchor,constant: 4),
             addedFuncKeyLine3Stack.trailingAnchor.constraint(equalTo: safeGuide.trailingAnchor, constant: -4),
-            addedFuncKeyLine3Stack.heightAnchor.constraint(equalToConstant: 40),
+//            addedFuncKeyLine3Stack.heightAnchor.constraint(equalToConstant: 40),
             
             
             nextKeyboardButton.widthAnchor.constraint(equalToConstant: 40),
-            nextKeyboardButton.heightAnchor.constraint(equalToConstant: 40),
+//            nextKeyboardButton.heightAnchor.constraint(equalToConstant: 40),
+            
             returnButton.widthAnchor.constraint(equalToConstant: 92),
             
             funcLineStackView.topAnchor.constraint(equalTo: addedFuncKeyLine3Stack.bottomAnchor, constant: 4),
@@ -165,6 +192,9 @@ class KeyboardViewController: UIInputViewController {
             funcLineStackView.trailingAnchor.constraint(equalTo: safeGuide.trailingAnchor, constant: -4),
             funcLineStackView.bottomAnchor.constraint(equalTo: safeGuide.bottomAnchor)
         ])
+        
+        self.changeModeButton.translatesAutoresizingMaskIntoConstraints = false
+        self.changeModeButton.widthAnchor.constraint(equalToConstant: 40).isActive = true
     }
     
     func setReturnKeyType(type: UIReturnKeyType? = UIReturnKeyType.default) {
@@ -199,6 +229,7 @@ class KeyboardViewController: UIInputViewController {
             self.returnButton.setTitle(text: textString[.default], option: "", for: .normal)
         }
     }
+    
     func createCharLineStackView(buttons:[KeyboardButton]) -> UIStackView {
         let stack = UIStackView(arrangedSubviews: buttons)
         stack.alignment = .fill
@@ -209,8 +240,6 @@ class KeyboardViewController: UIInputViewController {
         return stack
     }
     
-    
-//
 //    func getButtonLineText(kind:TextString.ButtonKind) ->([String],[String]) {
 //        let plainText = TextString.getLineText(buttonKind: kind)
 //        var firstReturnText = [String]()
@@ -233,34 +262,34 @@ class KeyboardViewController: UIInputViewController {
 //        }
 //        return (firstReturnText,secondReturnText)
 //    }
-//
+
     func createCharacterButtons(kind:TextString.ButtonKind) -> [KeyboardButton] {
         var buttons = [KeyboardButton]()
         
         let lineText = TextString.getLineText(buttonKind: kind)
-        if lineText.0.count > 3 {
-            let genealText = lineText.0
-            let specialText = lineText.1
-            
-            for i in 0 ..< genealText.count {
-                let key = KeyboardButton(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
-                let optionText = specialText.count > i ? specialText[i] : ""
-                key.setTitle(text: genealText[i], option: optionText, for: .normal)
-                key.button.addTarget(self, action: #selector(touchUpChartacterKey(_:)), for: .touchUpInside)
-                var tagValue = 0
-                let longGesture = UILongPressGestureRecognizer(target: self, action: #selector(longTouchCharacterKeyGesture(_:)))
-                longGesture.minimumPressDuration = 0.3
-                switch kind {
-                case .en(.l1),.ko(.l1): tagValue += 100
-                case .en(.l2),.ko(.l2): tagValue += 200
-                case .en(.l3),.ko(.l3): tagValue += 300
-                case .en(.number),.ko(.number): tagValue += 0
-                }
-                tagValue += i
-                key.button.tag = tagValue
-                key.button.addGestureRecognizer(longGesture)
-                buttons.append(key)
+        guard lineText.generalText.count > 3 else { return buttons }
+        
+        let generalText = lineText.generalText
+        let specialText = lineText.optionText
+        
+        for i in 0 ..< generalText.count {
+            let key = KeyboardButton(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+            let optionText = specialText.count > i ? specialText[i] : ""
+            key.setTitle(text: generalText[i], option: optionText, for: .normal)
+            key.button.addTarget(self, action: #selector(touchUpChartacterKey(_:)), for: .touchUpInside)
+            var tagValue = 0
+            let longGesture = UILongPressGestureRecognizer(target: self, action: #selector(longTouchCharacterKeyGesture(_:)))
+            longGesture.minimumPressDuration = 0.3
+            switch kind {
+            case .en(.l1),.ko(.l1): tagValue += 100
+            case .en(.l2),.ko(.l2): tagValue += 200
+            case .en(.l3),.ko(.l3): tagValue += 300
+            case .en(.number),.ko(.number): tagValue += 0
             }
+            tagValue += i
+            key.button.tag = tagValue
+            key.button.addGestureRecognizer(longGesture)
+            buttons.append(key)
         }
         return buttons
     }
@@ -342,6 +371,11 @@ class KeyboardViewController: UIInputViewController {
                         key.button.setTitle("ㄲ", for: .normal)
                     case "ㅅ":
                         key.button.setTitle("ㅆ", for: .normal)
+                    case "ㅐ":
+                        key.button.setTitle("ㅒ", for: .normal)
+                    case "ㅔ":
+                        key.button.setTitle("ㅖ", for: .normal)
+                        
                     default: break
                     }
                 }
@@ -370,6 +404,10 @@ class KeyboardViewController: UIInputViewController {
                         key.button.setTitle("ㄱ", for: .normal)
                     case "ㅆ":
                         key.button.setTitle("ㅅ", for: .normal)
+                    case "ㅒ":
+                        key.button.setTitle("ㅐ", for: .normal)
+                    case "ㅖ":
+                        key.button.setTitle("ㅔ", for: .normal)
                     default: break
                     }
                 }
@@ -385,85 +423,7 @@ class KeyboardViewController: UIInputViewController {
         }
     }
     
-    @objc func touchUpChartacterKey(_ sender:DKey) {
-        //insertCharacter
-        if let character = sender.titleLabel?.text {
-            UIDevice.current.playInputClick()
-            self.textDocumentProxy.insertText(character)
-        }
-        if isPushedShift { isPushedShift = false }
-    }
-    
-    @objc func touchUpSpaceKey() {
-        self.textDocumentProxy.insertText(" ")
-        UIDevice.current.playInputClick()
-        if isPushedShift { isPushedShift = false }
-    }
-    
-    @objc func touchUpReturnKey(_ sender:DKey) {
-        self.textDocumentProxy.insertText("\n")
-        UIDevice.current.playInputClick()
-        if isPushedShift { isPushedShift = false }
-    }
-    
-    @objc func touchUpDeleteKey() {
-        self.deleteCharacterBeforeCursor()
-        if isPushedShift { isPushedShift = false }
-    }
-    
-    @objc func touchUpShiftKey() {
-        UIDevice.current.playInputClick()
-        self.isPushedShift = !self.isPushedShift
-    }
-    
-    @objc func deleteCharacterBeforeCursor() {
-        self.textDocumentProxy.deleteBackward()
-        UIDevice.current.playInputClick()
-    }
-    
-    @objc func longTouchDeleteGesture(_ sender:UIGestureRecognizer) {
-        if sender.state == .began {
-            self.longPressDeleteButtonTimer =
-                Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.deleteCharacterBeforeCursor), userInfo: nil, repeats: true)
-        } else if sender.state == .ended || sender.state == .cancelled {
-            self.longPressDeleteButtonTimer?.invalidate()
-            self.longPressDeleteButtonTimer = nil
-        }
-    }
-    
-    /*
-    @objc func longTouchChartacterKey(_ sender:DKey) {
-        let optionText = sender.getOptionText()
-        if optionText.count > 0 {
-            self.textDocumentProxy.insertText(sender.getOptionText())
-        } else if let text = sender.titleLabel?.text {
-            self.textDocumentProxy.insertText(text)
-        }
-        if isPushedShift { isPushedShift = false }
-    }*/
-    
-    @objc func longTouchCharacterKeyGesture(_ sender:UILongPressGestureRecognizer) {
-        if sender.state == .ended {
-            let tagValue:Int = sender.view?.tag ?? 0
-            guard tagValue >= 100 else { return }
-            
-            let text:String
-            let floor:Int = tagValue / 100
-            switch floor {
-            case 1:
-                let index = tagValue - 100
-                text = TextString.OptionKeyButtonText[.l1]![index]
-            case 2:
-                let index = tagValue - 200
-                text = TextString.OptionKeyButtonText[.l2]![index]
-            case 3:
-                let index = tagValue - 300
-                text = TextString.OptionKeyButtonText[.l3]![index]
-            default: return
-            }
-            
-            self.textDocumentProxy.insertText(text)
-            UIDevice.current.playInputClick()
-        }
+    func setLastDocumentIdentifier(_ id: UUID?) {
+        self.lastDocumentIdentifier = id
     }
 }

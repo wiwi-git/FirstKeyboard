@@ -81,6 +81,8 @@ class TextString {
         .l3: optionKeyText[3],
     ]
     
+    /*
+    /// 0:generalText, 1:optionText
     static func getLineText(buttonKind: ButtonKind) -> ([String],[String]){
         switch buttonKind {
         case .ko(.l1): return (KoKeyboardButtonText[.l1]!,OptionKeyButtonText[.l1]!)
@@ -92,5 +94,28 @@ class TextString {
         case .en(.l3): return (EnKeyboardButtonText[.l3]!,OptionKeyButtonText[.l3]!)
         case .en(.number): return (EnKeyboardButtonText[.number]!,OptionKeyButtonText[.number]!)
         }
+    }
+     */
+    static func getLineText(buttonKind: ButtonKind) -> LineText {
+        switch buttonKind {
+        case .ko(.l1): return .init(KoKeyboardButtonText[.l1]!,OptionKeyButtonText[.l1]!)
+        case .ko(.l2): return .init(KoKeyboardButtonText[.l2]!,OptionKeyButtonText[.l2]!)
+        case .ko(.l3): return .init(KoKeyboardButtonText[.l3]!,OptionKeyButtonText[.l3]!)
+        case .ko(.number): return .init(KoKeyboardButtonText[.number]!,OptionKeyButtonText[.number]!)
+        case .en(.l1): return .init(EnKeyboardButtonText[.l1]!,OptionKeyButtonText[.l1]!)
+        case .en(.l2): return .init(EnKeyboardButtonText[.l2]!,OptionKeyButtonText[.l2]!)
+        case .en(.l3): return .init(EnKeyboardButtonText[.l3]!,OptionKeyButtonText[.l3]!)
+        case .en(.number): return .init(EnKeyboardButtonText[.number]!,OptionKeyButtonText[.number]!)
+        }
+    }
+}
+
+struct LineText {
+    var generalText: [String]
+    var optionText: [String]
+    
+    init(_ generalText: [String],_ optionText: [String]) {
+        self.generalText = generalText
+        self.optionText = optionText
     }
 }
