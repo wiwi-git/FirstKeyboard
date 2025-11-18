@@ -108,6 +108,7 @@ final class HangulAutomata {
     }
     
     private func decompositionChosungJoongsung(charCode: UInt32) -> UInt32 {
+        guard charCode >= 0xAC00 else { return charCode }
         let unicodeHangul = charCode - 0xAC00
         let jongsung = (unicodeHangul) % 28
         let joongsung = ((unicodeHangul - jongsung) / 28) % 21
@@ -165,20 +166,15 @@ final class HangulAutomata {
     }
 }
 extension HangulAutomata {
-    /// 초기화 buffer,inpStack,currentHangulState
-    func removeBuffer() {
-        buffer.removeAll()
-        inpStack.removeAll()
-        currentHangulState = nil
-    }
     
     /// 변수들 초기값으로 재지정
     func reset() {
-        removeBuffer()
+        buffer.removeAll()
+        inpStack.removeAll()
+        currentHangulState = nil
         charCode = ""
         oldKey = 0
         oldChKind = nil
-        print("hangule.reset")
     }
     
     /// 키가 한글 자모(초성/중성)에 속하지 않으면 true
@@ -191,7 +187,6 @@ extension HangulAutomata {
     func hangulAutomata(key: String) {
         
         if isNonHangul(key) {
-            print("isNonHangul!!! \(currentHangulState)")
             if currentHangulState != nil {
                 inpStack.removeAll()
                 currentHangulState = nil

@@ -29,10 +29,6 @@ extension KeyboardViewController {
             self.textDocumentProxy.insertText(char)
             return
         }
-//        else if hangul.isNonHangul(char) {
-//            insertNonHangulChar(char)
-//            return
-//        }
         
         let currentID = textDocumentProxy.documentIdentifier
         if currentID != lastDocumentIdentifier {
@@ -41,26 +37,19 @@ extension KeyboardViewController {
             self.setLastDocumentIdentifier(currentID)
         }
         
+        let oldBufferText = self.hangul.buffer.joined()
+        
         self.hangul.hangulAutomata(key: char)
         
-        let buffer = self.hangul.buffer.joined()
-        print("> ",buffer)
-        for _ in 0..<buffer.count {
+        let newBufferText = self.hangul.buffer.joined()
+        
+        // 이전 조합을 지우고
+        for _ in 0..<oldBufferText.count {
             self.textDocumentProxy.deleteBackward()
         }
-        
-        self.textDocumentProxy.insertText(buffer)
+        // 새 조합으로 덮어쓰기
+        self.textDocumentProxy.insertText(newBufferText)
     }
-    
-    // MARK: - 비한글 키 입력
-//    func insertNonHangulChar(_ char: String) {
-//        if hangul.buffer.count > 0 {
-//            textDocumentProxy.insertText(hangul.buffer.joined())
-//            self.hangul.removeBuffer()
-//        }
-//        
-//        textDocumentProxy.insertText(char)
-//    }
     
     // TODO: 이 부분을 다른 키 이벤트와 합치고 싶은데 아이디어가 안떠오름
     @objc func touchUpSpaceKey() {
@@ -68,7 +57,10 @@ extension KeyboardViewController {
             UIDevice.current.playInputClick()
             if isPushedShift { isPushedShift = false }
         }
-        insertText(char: " ")
+        
+        // 공백은 조합을 끊고, 버퍼를 리셋
+        self.hangul.reset()
+        self.textDocumentProxy.insertText(" ")
     }
     
     @objc func touchUpReturnKey(_ sender:DKey) {
@@ -96,19 +88,47 @@ extension KeyboardViewController {
             self.textDocumentProxy.deleteBackward()
             return
         }
+        // ko
         
-        let count = self.hangul.buffer.count
-        if count == 0 {
+        
+        // 빈값
+        if hangul.buffer.isEmpty && hangul.inpStack.isEmpty {
             self.textDocumentProxy.deleteBackward()
             return
         }
         
-        self.hangul.deleteBuffer()
-        self.textDocumentProxy.deleteBackward()
+        // 기존 입력한 텍스트
+        let oldBufferText = self.hangul.buffer.joined()
         
-        if count > 0 {
-            textDocumentProxy.insertText(hangul.buffer.last ?? "")
+        // 버퍼 변화
+        self.hangul.deleteBuffer()
+        
+        // 변화된 텍스트
+        let newBufferText = self.hangul.buffer.joined()
+        
+        // 입력
+        for _ in 0..<oldBufferText.count {
+            self.textDocumentProxy.deleteBackward()
         }
+        self.textDocumentProxy.insertText(newBufferText)
+    }
+    
+    // TODO: insertText와 deleteCharacterBeforeCursor의 하단 겹치는 부분을 이걸로 대체하려고했는데 그렇게하면 이상동작을한다. 이유를 모르겠으니 나중에 지피티나 제미나이에게 물어보자
+    private func overwrite(middle: ()) {
+        // 기존 입력한 텍스트
+        let oldBufferText = self.hangul.buffer.joined()
+        
+        // 버퍼 변화
+        middle
+        
+        // 변화된 텍스트
+        let newBufferText = self.hangul.buffer.joined()
+        
+        // 입력
+        for _ in 0..<oldBufferText.count {
+            self.textDocumentProxy.deleteBackward()
+        }
+        self.textDocumentProxy.insertText(newBufferText)
     }
     
     @objc func touchUpChangeModeKey() {
