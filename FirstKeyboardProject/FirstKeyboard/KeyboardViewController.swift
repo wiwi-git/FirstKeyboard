@@ -23,23 +23,25 @@ class KeyboardViewController: UIInputViewController {
     var charLine3Buttons: [KeyboardButton]!
     
     var longPressDeleteButtonTimer: Timer?
-    
     var isPushedShift = false {
         didSet{
             self.changedShiftValue()
         }
     }
+    
     var language:TextString.language = .ko
     
-    let hangul : HangulAutomata = .init()
     
+    let hangul : HangulAutomata = .init()
     private(set) var lastDocumentIdentifier: UUID?
 
+    /*
     override func updateViewConstraints() {
         super.updateViewConstraints()
         // Add custom view sizing constraints here
     }
-
+     */
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -109,27 +111,7 @@ class KeyboardViewController: UIInputViewController {
         self.nextKeyboardButton.isHidden = !self.needsInputModeSwitchKey
         self.setReturnKeyType()
     }
-/*
-    override func textDidChange(_ textInput: UITextInput?) {
-        // The app has just changed the document's contents, the document context has been updated.
-        /*
-        let colorScheme: ColorScheme
 
-        if textDocumentProxy.keyboardAppearance == .dark {
-            print("colorScheme .dark")
-          colorScheme = .dark
-        } else {
-            print("colorScheme .light")
-          colorScheme = .light
-        }
-        setColorScheme(colorScheme)*/
-        //setColorScheme2()
-        
-        //let buttonTextColor = UIColor(named: "ButtonText")
-        //let buttonBackgroundColor = UIColor(named: "ButtonBackground")
-        //let buttonHighlightColor = UIColor(named: "ButtonHighlight")
-    }
-*/
     func setButtonsLayout() {
         let numberLineStackView = createCharLineStackView(buttons: numberLineButtons)
         let charLine1StackView = createCharLineStackView(buttons: charLine1Buttons)
@@ -161,17 +143,14 @@ class KeyboardViewController: UIInputViewController {
             numberLineStackView.topAnchor.constraint(equalTo: safeGuide.topAnchor, constant: 4),
             numberLineStackView.leadingAnchor.constraint(equalTo: safeGuide.leadingAnchor, constant: 4),
             numberLineStackView.trailingAnchor.constraint(equalTo: safeGuide.trailingAnchor, constant: -4),
-//            numberLineStackView.heightAnchor.constraint(equalToConstant: 40),
             
             charLine1StackView.topAnchor.constraint(equalTo: numberLineStackView.bottomAnchor, constant: 4),
             charLine1StackView.leadingAnchor.constraint(equalTo: safeGuide.leadingAnchor,constant: 4),
             charLine1StackView.trailingAnchor.constraint(equalTo: safeGuide.trailingAnchor, constant: -4),
-//            charLine1StackView.heightAnchor.constraint(equalToConstant: 40),
             
             charLine2StackView.topAnchor.constraint(equalTo: charLine1StackView.bottomAnchor, constant: 4),
             charLine2StackView.leadingAnchor.constraint(equalTo: safeGuide.leadingAnchor,constant: 24),
             charLine2StackView.trailingAnchor.constraint(equalTo: safeGuide.trailingAnchor, constant: -24),
-//            charLine2StackView.heightAnchor.constraint(equalToConstant: 40),
             
             shiftButton.widthAnchor.constraint(equalToConstant: 45),
             deleteButton.widthAnchor.constraint(equalToConstant: 45),
@@ -179,11 +158,8 @@ class KeyboardViewController: UIInputViewController {
             addedFuncKeyLine3Stack.topAnchor.constraint(equalTo: charLine2StackView.bottomAnchor, constant: 4),
             addedFuncKeyLine3Stack.leadingAnchor.constraint(equalTo: safeGuide.leadingAnchor,constant: 4),
             addedFuncKeyLine3Stack.trailingAnchor.constraint(equalTo: safeGuide.trailingAnchor, constant: -4),
-//            addedFuncKeyLine3Stack.heightAnchor.constraint(equalToConstant: 40),
-            
             
             nextKeyboardButton.widthAnchor.constraint(equalToConstant: 40),
-//            nextKeyboardButton.heightAnchor.constraint(equalToConstant: 40),
             
             returnButton.widthAnchor.constraint(equalToConstant: 92),
             
@@ -239,29 +215,6 @@ class KeyboardViewController: UIInputViewController {
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
     }
-    
-//    func getButtonLineText(kind:TextString.ButtonKind) ->([String],[String]) {
-//        let plainText = TextString.getLineText(buttonKind: kind)
-//        var firstReturnText = [String]()
-//        var secondReturnText = [String]()
-//        let split = plainText.split(separator: " ")
-//        if split.count == 2 {
-//            let general = split[0].split(separator: ",")
-//            let specialSimbols = split[1].split(separator: ",")
-//            for text in general {
-//                firstReturnText.append(String(text))
-//            }
-//            for text in specialSimbols {
-//                secondReturnText.append(String(text))
-//            }
-//        } else if split.count == 1 {
-//            let general = split[0].split(separator: ",")
-//            for text in general {
-//                firstReturnText.append(String(text))
-//            }
-//        }
-//        return (firstReturnText,secondReturnText)
-//    }
 
     func createCharacterButtons(kind:TextString.ButtonKind) -> [KeyboardButton] {
         var buttons = [KeyboardButton]()
@@ -293,65 +246,6 @@ class KeyboardViewController: UIInputViewController {
         }
         return buttons
     }
-    /*
-    func setColorScheme2() {
-        let buttonTextColor = UIColor(named: "ButtonText")
-        let buttonBackgroundColor = UIColor(named: "ButtonBackground")
-        let buttonHighlightColor = UIColor(named: "ButtonHighlight")
-        let backgroundColor = UIColor(named: "Background")
-        DispatchQueue.main.async {
-            let buttons:[[KeyboardButton]] = [self.charLine1Buttons,self.charLine2Buttons,self.charLine3Buttons,self.numberLineButtons]
-            for keys in buttons{
-                for key in keys {
-                    key.setTitleColor(buttonTextColor, for: .normal)
-                    key.button.tintColor = buttonTextColor
-                    key.optionLabel.textColor = .darkGray
-                }
-            }
-            let funcButtons:[KeyboardButton] = [self.nextKeyboardButton, self.deleteButton, self.shiftButton, self.spaceButton]
-            for key in funcButtons {
-                key.defaultBackgroundColor = buttonBackgroundColor!
-                key.highlightBackgroundColor = buttonHighlightColor!
-            }
-            self.view.backgroundColor = backgroundColor
-        }
-    }*/
-    /*
-    func setColorScheme(_ colorScheme: ColorScheme) {
-        let colorScheme = KeyboardColors(colorScheme: colorScheme)
-        for button in charLine1Buttons {
-            button.setTitleColor(colorScheme.buttonTextColor, for: .normal)
-            button.button.tintColor = colorScheme.buttonTextColor
-            button.optionLabel.textColor = colorScheme.optionTextColor
-        }
-        for button in charLine2Buttons {
-            button.setTitleColor(colorScheme.buttonTextColor, for: .normal)
-            button.button.tintColor = colorScheme.buttonTextColor
-            button.optionLabel.textColor = colorScheme.optionTextColor
-        }
-        for button in charLine3Buttons {
-            button.setTitleColor(colorScheme.buttonTextColor, for: .normal)
-            button.button.tintColor = colorScheme.buttonTextColor
-            button.optionLabel.textColor = colorScheme.optionTextColor
-        }
-        for button in numberLineButtons{
-            button.setTitleColor(colorScheme.buttonTextColor, for: .normal)
-            button.button.tintColor = colorScheme.buttonTextColor
-            button.optionLabel.textColor = colorScheme.optionTextColor
-        }
-        
-        self.nextKeyboardButton.defaultBackgroundColor = colorScheme.buttonBackgroundColor
-        self.nextKeyboardButton.highlightBackgroundColor = colorScheme.buttonHighlightColor
-        
-        self.deleteButton.defaultBackgroundColor = colorScheme.buttonBackgroundColor
-        self.deleteButton.highlightBackgroundColor = colorScheme.buttonHighlightColor
-        
-        self.shiftButton.defaultBackgroundColor = colorScheme.buttonBackgroundColor
-        self.shiftButton.highlightBackgroundColor = colorScheme.buttonHighlightColor
-        
-        self.spaceButton.defaultBackgroundColor = colorScheme.buttonBackgroundColor
-        self.spaceButton.highlightBackgroundColor = colorScheme.buttonHighlightColor
-    }*/
     
     /// isPushedShift변수의 didSet 호출시 호출되는 함수
     func changedShiftValue(){
@@ -426,4 +320,114 @@ class KeyboardViewController: UIInputViewController {
     func setLastDocumentIdentifier(_ id: UUID?) {
         self.lastDocumentIdentifier = id
     }
+}
+
+extension KeyboardViewController {
+    // 나중에 기능 재 구현을 위해 남겨두는 주석들
+    /*
+    func setColorScheme2() {
+        let buttonTextColor = UIColor(named: "ButtonText")
+        let buttonBackgroundColor = UIColor(named: "ButtonBackground")
+        let buttonHighlightColor = UIColor(named: "ButtonHighlight")
+        let backgroundColor = UIColor(named: "Background")
+        DispatchQueue.main.async {
+            let buttons:[[KeyboardButton]] = [self.charLine1Buttons,self.charLine2Buttons,self.charLine3Buttons,self.numberLineButtons]
+            for keys in buttons{
+                for key in keys {
+                    key.setTitleColor(buttonTextColor, for: .normal)
+                    key.button.tintColor = buttonTextColor
+                    key.optionLabel.textColor = .darkGray
+                }
+            }
+            let funcButtons:[KeyboardButton] = [self.nextKeyboardButton, self.deleteButton, self.shiftButton, self.spaceButton]
+            for key in funcButtons {
+                key.defaultBackgroundColor = buttonBackgroundColor!
+                key.highlightBackgroundColor = buttonHighlightColor!
+            }
+            self.view.backgroundColor = backgroundColor
+        }
+    }*/
+    /*
+    func setColorScheme(_ colorScheme: ColorScheme) {
+        let colorScheme = KeyboardColors(colorScheme: colorScheme)
+        for button in charLine1Buttons {
+            button.setTitleColor(colorScheme.buttonTextColor, for: .normal)
+            button.button.tintColor = colorScheme.buttonTextColor
+            button.optionLabel.textColor = colorScheme.optionTextColor
+        }
+        for button in charLine2Buttons {
+            button.setTitleColor(colorScheme.buttonTextColor, for: .normal)
+            button.button.tintColor = colorScheme.buttonTextColor
+            button.optionLabel.textColor = colorScheme.optionTextColor
+        }
+        for button in charLine3Buttons {
+            button.setTitleColor(colorScheme.buttonTextColor, for: .normal)
+            button.button.tintColor = colorScheme.buttonTextColor
+            button.optionLabel.textColor = colorScheme.optionTextColor
+        }
+        for button in numberLineButtons{
+            button.setTitleColor(colorScheme.buttonTextColor, for: .normal)
+            button.button.tintColor = colorScheme.buttonTextColor
+            button.optionLabel.textColor = colorScheme.optionTextColor
+        }
+        
+        self.nextKeyboardButton.defaultBackgroundColor = colorScheme.buttonBackgroundColor
+        self.nextKeyboardButton.highlightBackgroundColor = colorScheme.buttonHighlightColor
+        
+        self.deleteButton.defaultBackgroundColor = colorScheme.buttonBackgroundColor
+        self.deleteButton.highlightBackgroundColor = colorScheme.buttonHighlightColor
+        
+        self.shiftButton.defaultBackgroundColor = colorScheme.buttonBackgroundColor
+        self.shiftButton.highlightBackgroundColor = colorScheme.buttonHighlightColor
+        
+        self.spaceButton.defaultBackgroundColor = colorScheme.buttonBackgroundColor
+        self.spaceButton.highlightBackgroundColor = colorScheme.buttonHighlightColor
+    }*/
+    
+/*
+    func getButtonLineText(kind:TextString.ButtonKind) ->([String],[String]) {
+        let plainText = TextString.getLineText(buttonKind: kind)
+        var firstReturnText = [String]()
+        var secondReturnText = [String]()
+        let split = plainText.split(separator: " ")
+        if split.count == 2 {
+            let general = split[0].split(separator: ",")
+            let specialSimbols = split[1].split(separator: ",")
+            for text in general {
+                firstReturnText.append(String(text))
+            }
+            for text in specialSimbols {
+                secondReturnText.append(String(text))
+            }
+        } else if split.count == 1 {
+            let general = split[0].split(separator: ",")
+            for text in general {
+                firstReturnText.append(String(text))
+            }
+        }
+        return (firstReturnText,secondReturnText)
+    }
+    */
+    
+    /*
+        override func textDidChange(_ textInput: UITextInput?) {
+            // The app has just changed the document's contents, the document context has been updated.
+            /*
+            let colorScheme: ColorScheme
+
+            if textDocumentProxy.keyboardAppearance == .dark {
+                print("colorScheme .dark")
+              colorScheme = .dark
+            } else {
+                print("colorScheme .light")
+              colorScheme = .light
+            }
+            setColorScheme(colorScheme)*/
+            //setColorScheme2()
+            
+            //let buttonTextColor = UIColor(named: "ButtonText")
+            //let buttonBackgroundColor = UIColor(named: "ButtonBackground")
+            //let buttonHighlightColor = UIColor(named: "ButtonHighlight")
+        }
+    */
 }
