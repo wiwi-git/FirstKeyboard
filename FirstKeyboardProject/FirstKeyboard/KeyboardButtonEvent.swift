@@ -37,18 +37,9 @@ extension KeyboardViewController {
             self.setLastDocumentIdentifier(currentID)
         }
         
-        let oldBufferText = self.hangul.buffer.joined()
-        
-        self.hangul.hangulAutomata(key: char)
-        
-        let newBufferText = self.hangul.buffer.joined()
-        
-        // 이전 조합을 지우고
-        for _ in 0..<oldBufferText.count {
-            self.textDocumentProxy.deleteBackward()
+        overwrite {
+            self.hangul.hangulAutomata(key: char)
         }
-        // 새 조합으로 덮어쓰기
-        self.textDocumentProxy.insertText(newBufferText)
     }
     
     // TODO: 이 부분을 다른 키 이벤트와 합치고 싶은데 아이디어가 안떠오름
@@ -97,29 +88,17 @@ extension KeyboardViewController {
             return
         }
         
-        // 기존 입력한 텍스트
-        let oldBufferText = self.hangul.buffer.joined()
-        
-        // 버퍼 변화
-        self.hangul.deleteBuffer()
-        
-        // 변화된 텍스트
-        let newBufferText = self.hangul.buffer.joined()
-        
-        // 입력
-        for _ in 0..<oldBufferText.count {
-            self.textDocumentProxy.deleteBackward()
+        overwrite {
+            self.hangul.deleteBuffer()
         }
-        self.textDocumentProxy.insertText(newBufferText)
     }
     
-    // TODO: insertText와 deleteCharacterBeforeCursor의 하단 겹치는 부분을 이걸로 대체하려고했는데 그렇게하면 이상동작을한다. 이유를 모르겠으니 나중에 지피티나 제미나이에게 물어보자
-    private func overwrite(middle: ()) {
+    private func overwrite(middle: () -> Void) {
         // 기존 입력한 텍스트
         let oldBufferText = self.hangul.buffer.joined()
         
         // 버퍼 변화
-        middle
+        middle()
         
         // 변화된 텍스트
         let newBufferText = self.hangul.buffer.joined()
