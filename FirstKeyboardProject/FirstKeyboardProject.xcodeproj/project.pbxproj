@@ -23,7 +23,6 @@
 		17CA9ABB2EBCF757000BDD3F /* HangulAutomata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CA9ABA2EBCF750000BDD3F /* HangulAutomata.swift */; };
 		17CA9ABD2EBD1E27000BDD3F /* NotificationName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CA9ABC2EBD1E24000BDD3F /* NotificationName.swift */; };
 		17CA9AC02EBE75CC000BDD3F /* KeyboardButtonEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CA9ABF2EBE75C3000BDD3F /* KeyboardButtonEvent.swift */; };
-		17CA9AC22EC4DB01000BDD3F /* exHangul.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CA9AC12EC4DAF8000BDD3F /* exHangul.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,7 +66,6 @@
 		17CA9ABA2EBCF750000BDD3F /* HangulAutomata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangulAutomata.swift; sourceTree = "<group>"; };
 		17CA9ABC2EBD1E24000BDD3F /* NotificationName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationName.swift; sourceTree = "<group>"; };
 		17CA9ABF2EBE75C3000BDD3F /* KeyboardButtonEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardButtonEvent.swift; sourceTree = "<group>"; };
-		17CA9AC12EC4DAF8000BDD3F /* exHangul.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = exHangul.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,7 +122,6 @@
 		1718907E2478CAC5007B56A4 /* FirstKeyboard */ = {
 			isa = PBXGroup;
 			children = (
-				17CA9AC12EC4DAF8000BDD3F /* exHangul.swift */,
 				17CA9ABF2EBE75C3000BDD3F /* KeyboardButtonEvent.swift */,
 				17CA9ABC2EBD1E24000BDD3F /* NotificationName.swift */,
 				17CA9ABA2EBCF750000BDD3F /* HangulAutomata.swift */,
@@ -263,7 +260,6 @@
 				17C116CB2478CF660099ABFA /* TextString.swift in Sources */,
 				17CA9AC02EBE75CC000BDD3F /* KeyboardButtonEvent.swift in Sources */,
 				17CA9ABD2EBD1E27000BDD3F /* NotificationName.swift in Sources */,
-				17CA9AC22EC4DB01000BDD3F /* exHangul.swift in Sources */,
 				17CA9ABB2EBCF757000BDD3F /* HangulAutomata.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

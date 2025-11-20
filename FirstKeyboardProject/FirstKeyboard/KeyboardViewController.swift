@@ -91,25 +91,18 @@ class KeyboardViewController: UIInputViewController {
         
         let longTouchDeleteButtonGesture = UILongPressGestureRecognizer(target: self, action: #selector(self.longTouchDeleteGesture(_:)))
         longTouchDeleteButtonGesture.minimumPressDuration = 0.2
-        self.deleteButton.button.addGestureRecognizer(longTouchDeleteButtonGesture)
-        
-        
+        self.deleteButton.button.addGestureRecognizer(longTouchDeleteButtonGesture)    
     }
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-//        self.nextKeyboardButton.isHidden = !self.needsInputModeSwitchKey
-//        self.setReturnKeyType()
         let backgroundColor = UIColor(named: "Background")
         self.view.backgroundColor = backgroundColor
-
     }
     
-    // TODO: [UIInputViewController needsInputModeSwitchKey] was called before a connection was established to the host application 라는 경고로 옴겨봤는데 별 효과 없는듯 다른 방법을 찾아봐라
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        self.nextKeyboardButton.isHidden = !self.needsInputModeSwitchKey
+    override func viewDidAppear(_ animated: Bool) {
         self.setReturnKeyType()
+        self.nextKeyboardButton.isHidden = !self.needsInputModeSwitchKey
     }
 
     func setButtonsLayout() {

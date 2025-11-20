@@ -112,7 +112,7 @@ extension KeyboardViewController {
     
     @objc func touchUpChangeModeKey() {
         defer {
-            hangul.clearStack()
+            self.hangul.reset()
             UIDevice.current.playInputClick()
         }
         
